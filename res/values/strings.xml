@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Deep Green</string>
+    <string name="button_local_game">Play Against Human (Local)</string>
+    <string name="button_bt_game">Play Against Human (Wireless)</string>
+    <string name="button_computer_game">Play Against Computer</string>
+    <string name="button_replay_game">Replay A Recorded Game</string>
+    <string name="host_button">Host a Game</string>
+    <string name="client_button">Join an Exising Game</string>
+    <string name="action_settings">Settings</string>
+    <string name="address_label">Remote Host Address:</string>
+    <string name="address_hint">255.255.255.255</string>
+    <string name="port_number_label">Port Number:</string>
+    <string name="port_number_hint">8080</string>
+    <string name="start_button_text">Start</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="knight_desc">A picture of a knight piece</string>
+    <string name="title_activity_game_play">GamePlay</string>
+    <string name="title_activity_history_selection">HistorySelection</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_remote_setup">Remote Multiplayer Setup</string>
+    <string name="no_games">Sorry! You don\'t have any saved games yet.</string>
+    
+    <string name="undo_button">Undo</string>
+    <string name="nextMoveButton">Next</string>
+    <string name="let_ai_pick_button">AI Move</string>
+    <string name="resign_button">Resign</string>
+    <string name="draw_button">Draw</string>
+    
+    <string name="checkmate_text">Checkmate</string>
+    <string name="stalemate_text">Stalemate</string>
+    <string name="draw_text">Draw</string>
+    <string name="check_text">Check</string>
+    <string name="black_win">Black Wins</string>
+    <string name="white_win">White Wins</string>
+    <string name="player_black_resign">Black Has Resigned</string>
+    <string name="player_white_resign">White Has Resigned</string>
+
+</resources>
