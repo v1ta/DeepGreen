@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/Joseph/Downloads/Deep-Green/app/build/intermediates/res/merged/debug/menu/remote_setup.xml",
+        "source": "/Users/Joseph/Downloads/Deep-Green/app/src/main/res/menu/remote_setup.xml"
+    },
+    {
+        "merged": "/Users/Joseph/Downloads/Deep-Green/app/build/intermediates/res/merged/debug/menu/game_play.xml",
+        "source": "/Users/Joseph/Downloads/Deep-Green/app/src/main/res/menu/game_play.xml"
+    },
+    {
+        "merged": "/Users/Joseph/Downloads/Deep-Green/app/build/intermediates/res/merged/debug/menu/game_select.xml",
+        "source": "/Users/Joseph/Downloads/Deep-Green/app/src/main/res/menu/game_select.xml"
+    },
+    {
+        "merged": "/Users/Joseph/Downloads/Deep-Green/app/build/intermediates/res/merged/debug/menu/history_selection.xml",
+        "source": "/Users/Joseph/Downloads/Deep-Green/app/src/main/res/menu/history_selection.xml"
+    }
+]

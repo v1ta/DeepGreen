@@ -1,0 +1,104 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:gravity="center"
+    android:background="@drawable/wood"
+    tools:context="com.defritza.app.RemoteSetup" >
+    
+    <ImageView
+        android:id="@+id/knightView"
+        android:src="@drawable/knight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/knight_desc" />
+    
+    <Button 
+        android:id="@+id/hostButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:background="@drawable/rounded_rect"
+        android:text="@string/host_button"
+        android:layout_marginBottom="15dip" />
+    
+    <Button 
+        android:id="@+id/clientButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hostButton"
+        android:background="@drawable/rounded_rect"
+        android:text="@string/client_button" />
+    
+    <TextView
+        android:id="@+id/addressLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:visibility="gone"
+        android:text="@string/address_label" />
+    
+    <EditText
+        android:id="@+id/addressField"
+        android:inputType="text"
+        android:hint="@string/address_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addressLabel"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#D0EAEAEA"
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/portLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addressField"
+        android:visibility="gone"
+        android:textColor="#FFFFFF"
+        android:text="@string/port_number_label" />
+    
+    <EditText 
+        android:id="@+id/portField"
+        android:inputType="number"
+        android:hint="@string/port_number_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/portLabel"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#D0EAEAEA"
+        android:visibility="gone" />
+    
+    <Button
+        android:id="@+id/remoteGameButton" 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/portField"
+        android:layout_marginTop="15dip"
+        android:layout_marginBottom="15dip"
+        android:text="@string/start_button_text"
+        android:visibility="gone"
+        android:background="@drawable/rounded_rect"/>
+    
+    <Button
+        android:id="@+id/remoteCancelButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/remoteGameButton"
+        android:text="@string/cancel_button_text"
+        android:visibility="gone"
+        android:background="@drawable/rounded_rect" />
+    
+    <TextView
+        android:id="@+id/errorLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/remoteCancelButton"
+        android:layout_marginTop="15dip"
+        android:visibility="gone" />
+    
+</RelativeLayout>
