@@ -11,4 +11,4 @@ Features
 * Player vs. Player (remote)
 * Record, save, and playback games
 
-
+https://play.google.com/apps/testing/com.defritza.chess
