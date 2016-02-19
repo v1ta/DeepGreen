@@ -37,7 +37,6 @@ public class HistorySelect extends ActionBarActivity implements OnItemClickListe
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_history_selection);
-
     ListView list = (ListView) findViewById(R.id.historyList);
     TextView error = (TextView) findViewById(R.id.no_game_message);
     ArrayList<History> games = Serializer.readHistories(this);

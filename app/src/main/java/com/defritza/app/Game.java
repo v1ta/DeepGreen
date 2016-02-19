@@ -54,8 +54,8 @@ import java.util.ArrayList;
  */
 @SuppressWarnings({"deprecation", "unused"})
 @SuppressLint("NewApi")
-public class Game extends ActionBarActivity implements View.OnClickListener, DialogInterface.OnClickListener, View.OnTouchListener {
-
+public class Game extends ActionBarActivity implements View.OnClickListener,
+    DialogInterface.OnClickListener, View.OnTouchListener {
   static Context context;
   private final CharSequence upgrade[] = {"Queen", "Bishop", "Knight", "Rook"};
   private BoardView boardView;
@@ -85,7 +85,6 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
     boardContainer = (RelativeLayout) findViewById(R.id.game_play_board_frame);
     boardView = new BoardView(boardContainer.getContext(), 8, Color.BLACK, Color.WHITE);
     boardContainer.addView(boardView);
-
     // Get arguments passed through the Intent object.
     Intent intent = getIntent();
     board = (Board) intent.getSerializableExtra(Constants.EXTRA_BOARD);
@@ -94,7 +93,6 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
     playerWhite = (Player) intent.getSerializableExtra(Constants.EXTRA_W_PLAYER);
     playerBlack = (Player) intent.getSerializableExtra(Constants.EXTRA_B_PLAYER);
     replay = (History) intent.getSerializableExtra(Constants.EXTRA_HISTORY);
-
     // Figure out what kind of game we're playing.
     if (replay != null) {
       type = GameType.REPLAY;
@@ -108,38 +106,34 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
     } else {
       type = GameType.LOCAL;
     }
-
     // Perform necessary setup.
     playerTurn = playerWhite;
     board.loadPlayer(playerBlack);
     board.loadPlayer(playerWhite);
     game.calculateMoves(board);
-    if (replay == null) replay = new History("2 player game");
-
+    if (replay == null) {
+      replay = new History("2 player game");
+    }
     // Grab all of the buttons.
     buttonResign = (Button) findViewById(R.id.buttonResign);
     buttonDraw = (Button) findViewById(R.id.buttonDraw);
     buttonAIMove = (Button) findViewById(R.id.buttonAIMove);
     buttonUndoMove = (Button) findViewById(R.id.buttonUndoMove);
     buttonNextMove = (Button) findViewById(R.id.buttonNextMove);
-
     // Setup listeners.
     buttonAIMove.setOnClickListener(this);
     buttonUndoMove.setOnClickListener(this);
     buttonNextMove.setOnClickListener(this);
     buttonDraw.setOnClickListener(this);
     buttonResign.setOnClickListener(this);
-
     // Setup the draw dialog popup.
     drawBuilder = new AlertDialog.Builder(this);
     drawBuilder.setMessage("Opponent requests a draw. Accept?");
     drawBuilder.setCancelable(true);
     drawBuilder.setPositiveButton("Yes", this);
     drawBuilder.setNegativeButton("No", this);
-
     // Configure game features.
     setupGameFeatures();
-
     // Add a listener to get the size of the BoardView and setup pieces after initial layout.
     final Game that = this;
     boardView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -158,17 +152,15 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
       }
 
     });
-
-    if (type == GameType.REMOTE && playerWhite instanceof RemotePlayer) runOpponentMove(null);
+    if (type == GameType.REMOTE && playerWhite instanceof RemotePlayer) {
+      runOpponentMove(null);
+    }
   }
 
   @Override
   public void onClick(DialogInterface dialog, int which) {
-
     if (dialog == drawDialog) {
-
       if (which == -1) {
-
         dialog.cancel();
         gameOver("Draw");
         return;
@@ -181,7 +173,9 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
       gameSaveBuilder.setPositiveButton("Save", this);
       gameSaveBuilder.setNegativeButton("Cancel", this);
       gameSaveDialog = gameSaveBuilder.create();
-      if (type != GameType.REPLAY) gameSaveDialog.show();
+      if (type != GameType.REPLAY) {
+        gameSaveDialog.show();
+      }
     } else if (dialog == gameSaveDialog) {
       if (which == -1) {
         replay.setName(gameName.getText().toString());
@@ -198,11 +192,12 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
     }
     dialog.cancel();
   }
-
   @Override
   public boolean onTouch(View view, MotionEvent event) {
     // Perform setup and sanity checks.
-    if (type == GameType.REPLAY) return false;
+    if (type == GameType.REPLAY) {
+      return false;
+    }
     if (view instanceof PieceView) {
       toMove = (PieceView) view;
       layoutParams = (RelativeLayout.LayoutParams) toMove.getLayoutParams();
@@ -210,25 +205,20 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
       return false;
     }
     int action = event.getAction();
-
     switch (action & MotionEvent.ACTION_MASK) {
-
       // We're beginning to draw a Piece.
       case MotionEvent.ACTION_DOWN:
         // Make sure the chosen Piece is on the right team..
         if (toMove.getPiece().getOwner().equals(game.playerTurn().toString())) {
           ArrayList<Location> validMoves = toMove.getPiece().getValidMoves();
-
 				/* Make sure the selected piece has >= 1 move(s) */
           if (validMoves.size() > 0) {
             // Save starting location and layout constraints for chosen Piece.
             originalLocation = (RelativeLayout.LayoutParams) toMove.getLayoutParams();
             origin = new Location(originalLocation.topMargin, originalLocation.leftMargin, sDim);
-
             // Get the starting X and Y coordinates for this touch event.
             lastX = event.getX();
             lastY = event.getY();
-
             // Functionality allows for multiple pieces to be moved at once, while this isn't allowed having these events eliminated crashes .
             activePointerId = event.getPointerId(0);
           } else {
@@ -240,30 +230,28 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
           return false;
         }
         break;
-
       // We're in the middle of dragging a piece.
       case MotionEvent.ACTION_MOVE:
         // Get the new X and Y for this touch event and calculate the differential.
         int pointerIndex = event.findPointerIndex(activePointerId);
         float x = event.getX(pointerIndex), y = event.getY(pointerIndex);
         float dx = x - lastX, dy = y - lastY;
-
         // Update offsets.
         layoutParams.leftMargin += dx;
         layoutParams.topMargin += dy;
         toMove.setLayoutParams(layoutParams);
         break;
-
       // We're ending the process of dragging a piece.
       case MotionEvent.ACTION_UP:
         // Get initial state.
         Location from = toMove.getPiece().getPos();
-        Location move = new Location(layoutParams.topMargin + ((sDim / 8) / 2), layoutParams.leftMargin + ((sDim / 8) / 2), sDim);
+        Location move = new Location(layoutParams.topMargin + ((sDim / 8) / 2),
+            layoutParams.leftMargin + ((sDim / 8) / 2), sDim);
         Move tentative = performMove(new Move(game.playerTurn(), move, from, toMove.getPiece()));
-
         // Check if the move the user has selected is valid.
         if (tentative != null) {
-          if ((toMove.getPiece() instanceof Pawn || toMove.getPiece() instanceof Enpassant) && toMove.getPiece().getUpgradeLoc() == move.getI()) {
+          if ((toMove.getPiece() instanceof Pawn || toMove.getPiece() instanceof Enpassant)
+              && toMove.getPiece().getUpgradeLoc() == move.getI()) {
             promoted = toMove.getPiece();
             updatePiece();
           }
@@ -276,17 +264,13 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
           layoutParams.topMargin = (sDim / 8) * origin.getI();
           toMove.setLayoutParams(layoutParams);
         }
-
         activePointerId = -1;
         break;
-
       // Drag event was canceled.
       case MotionEvent.ACTION_CANCEL:
         activePointerId = -1;
         break;
-
     }
-
     return true;
   }
 
@@ -294,11 +278,9 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
   public void onClick(View view) {
     Button clicked = (Button) view;
     RelativeLayout.LayoutParams layoutParams;
-
     if (clicked == buttonAIMove) {
       // Play a sound effect for the user.
       boardContainer.playSoundEffect(SoundEffectConstants.CLICK);
-
       // Calculate and execute a move.
       Move aiMove = ComputerPlayer.calculateMove(game.playerTurn(), game, board);
       performMove(aiMove);
@@ -321,14 +303,12 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
       }
     } else if (clicked == buttonUndoMove) {
       int times = type == GameType.COMPUTER ? 2 : 1;
-
       for (int i = 0; i < times; i++) {
         // Get the previous move and perform sanity checks.
         Move toUndo = replay.rollback();
         if (toUndo == null) return;
         game.undo();
         boardContainer.playSoundEffect(SoundEffectConstants.CLICK);
-
         // Undo the move and redraw the piece's position on the board.
         board.getBoard()[toUndo.from.getI()][toUndo.from.getJ()] = toUndo.moved;
         toUndo.moved.updatePos(toUndo.from);
@@ -342,7 +322,6 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
         layoutParams.topMargin = (sDim / 8) * toUndo.from.getI();
         toUndo.moved.pieceMap.setLayoutParams(layoutParams);
         board.nukeCell(toUndo.to);
-
         // Check if a piece was captured by this move.
         if (toUndo.killed != null) {
           // Uncapture the piece and redraw it on the board.
@@ -360,15 +339,15 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
           toUndo.clone = null;
           toUndo.moved.resurrect();
         }
-
         // Reset pawns as having not moved if we're undoing a pawn.
         if (toUndo.moved instanceof Pawn || toUndo.moved instanceof Enpassant) {
-          if (toUndo.moved.getOwner().equals("White") && toUndo.from.getI() == 6)
+          if (toUndo.moved.getOwner().equals("White") && toUndo.from.getI() == 6) {
             toUndo.moved.reset();
-          else if (toUndo.moved.getOwner().equals("Black") && toUndo.from.getI() == 1)
+          }
+          else if (toUndo.moved.getOwner().equals("Black") && toUndo.from.getI() == 1) {
             toUndo.moved.reset();
+          }
         }
-
         // Having successfully undone the most recent move, recalculate moves for the board.
         game.calculateMoves(board);
       }
@@ -388,19 +367,23 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
   private void loadBoard() {
     ArrayList<Piece> pieces = board.getStartSetup();
     String[] pieceIndex = {"r", "n", "b", "q", "k", "b", "n", "r", "p"};
-
     int i = 0, j = 0;
     for (Piece piece : pieces) {
       try {
         // Grab the resource class object.
         Class<drawable> res = R.drawable.class;
-
         // Calculate the current piece index.
-        if (i < 8) j = i;
-        else if (i >= 8 && i < 24) j = 8;
-        else j = i - 24;
+        if (i < 8) {
+          j = i;
+        } else if (i >= 8 && i < 24) {
+          j = 8;
+        } else {
+          j = i - 24;
+        }
 
-        if (j > 8) j = 8;
+        if (j > 8) {
+          j = 8;
+        }
         // Get ID of drawable for current piece via reflection.
         Field field = null;
         if (i < 16) {
@@ -409,10 +392,8 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
           field = res.getField("white" + pieceIndex[j]);
         }
         int drawableId = field.getInt(null);
-
         // Instantiate and configure the current PieceView.
         loadPiece(piece, drawableId);
-
         // Calculate offset for current PieceView.
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) piece.pieceMap.getLayoutParams();
         if (i < 8) {
@@ -428,18 +409,14 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
           layoutParams.leftMargin = (sDim / 8) * (i - 24);
           layoutParams.topMargin = sDim - (sDim / 8);
         }
-
         // Finalize current PieceView.
         piece.pieceMap.setLayoutParams(layoutParams);
         piece.pieceMap.setOnTouchListener(this);
-
         i++;
       } catch (ReflectiveOperationException e) {
         // Oh Java...
       }
-
     }
-
   }
 
   private void loadPiece(Piece piece) {
@@ -457,7 +434,6 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
     } else if (piece instanceof King) {
       base += "k";
     }
-
     try {
       int drawableId = R.drawable.class.getField(base).getInt(null);
       loadPiece(piece, drawableId);
@@ -477,7 +453,9 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
   }
 
   private void dumpPiece(Piece piece) {
-    if (piece != null) boardContainer.removeView(piece.pieceMap);
+    if (piece != null) {
+      boardContainer.removeView(piece.pieceMap);
+    }
   }
 
   private void enableDisableViewGroup(ViewGroup viewGroup, boolean enabled) {
@@ -503,7 +481,9 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
     gameOverDialog = gameOverBuilder.create();
     gameOverDialog.show();
     // Cleanup Playable.
-    if (automaton != null) automaton.finish();
+    if (automaton != null) {
+      automaton.finish();
+    }
   }
 
   private void check(String condition) {
@@ -524,13 +504,13 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
   }
 
   private void runOpponentMove(Move move) {
-    if (move != null) automaton.updatePlayer(move);
-
+    if (move != null) {
+      automaton.updatePlayer(move);
+    }
     Move opponent = automaton.getMove(game, board);
     if (opponent == null && type == GameType.COMPUTER) {
       gameOver("Black checkmate");
     }
-
     performMove(opponent);
   }
 
@@ -611,7 +591,6 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
   }
 
   private class BoardView extends View {
-
     private int nSquares, colorA, colorB;
     private int squareDim;
     private Paint paint;
@@ -646,7 +625,5 @@ public class Game extends ActionBarActivity implements View.OnClickListener, Dia
       setMeasuredDimension(d, d);
       squareDim = width / nSquares;
     }
-
   }
-
 }
